@@ -6,6 +6,6 @@ export default merge(common, {
   mode: 'production',
   devtool: 'source-map',
   output: {
-    filename: 'sql-formatter.min.cjs',
+    filename: 'dlh-sql-formatter.min.cjs',
   },
 });

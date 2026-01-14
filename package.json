@@ -1,11 +1,11 @@
 {
-  "name": "sql-formatter",
-  "version": "15.6.12",
+  "name": "@dlh.io/dlh-sql-formatter",
+  "version": "1.0.1",
   "description": "Format whitespace in a SQL query to make it more readable",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "unpkg": "dist/sql-formatter.min.js",
+  "unpkg": "dist/dlh-sql-formatter.min.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -14,7 +14,10 @@
     }
   },
   "bin": {
-    "sql-formatter": "bin/sql-formatter-cli.cjs"
+    "dlh-sql-formatter": "bin/dlh-sql-formatter-cli.cjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "type": "module",
   "sideEffects": false,
@@ -66,16 +69,21 @@
     "grammar": "nearleyc src/parser/grammar.ne -o src/parser/grammar.ts",
     "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build:webpack": "webpack --config webpack.prod.js && cp dist/sql-formatter.min.cjs dist/sql-formatter.min.js",
+    "build:webpack": "webpack --config webpack.prod.js && shx cp dist/dlh-sql-formatter.min.cjs dist/dlh-sql-formatter.min.js",
     "build": "yarn grammar && npm-run-all --parallel build:cjs build:esm build:webpack",
     "release": "release-it"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sql-formatter-org/sql-formatter.git"
+    "url": "git+https://github.com/datalakehouse/dlh-sql-formatter.git"
   },
   "bugs": {
-    "url": "https://github.com/sql-formatter-org/sql-formatter/issues"
+    "url": "https://github.com/datalakehouse/dlh-sql-formatter/issues"
+  },
+  "homepage": "https://github.com/datalakehouse/dlh-sql-formatter#readme",
+  "author": {
+    "name": "DLH.io",
+    "url": "https://dlh.io"
   },
   "dependencies": {
     "argparse": "^2.0.1",
@@ -110,6 +118,7 @@
     "prettier": "^2.0.5",
     "release-it": "^15.1.1",
     "rimraf": "^3.0.2",
+    "shx": "^0.4.0",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",

@@ -1,6 +1,6 @@
-<a href='https://github.com/sql-formatter-org/sql-formatter'><img src="static/sql-formatter-icon.png" width="64"/></a>
+<a href='https://github.com/datalakehouse/dlh-sql-formatter'>
 
-# SQL Formatter [![NPM version](https://img.shields.io/npm/v/sql-formatter.svg)](https://npmjs.com/package/sql-formatter) ![Build status](https://img.shields.io/github/actions/workflow/status/sql-formatter-org/sql-formatter/coveralls.yaml) [![Coverage Status](https://coveralls.io/repos/github/sql-formatter-org/sql-formatter/badge.svg?branch=master)](https://coveralls.io/github/sql-formatter-org/sql-formatter?branch=master)
+# SQL Formatter [![NPM version](https://img.shields.io/npm/v/@dlh.io/dlh-sql-formatter.svg)](https://npmjs.com/package/@dlh.io/dlh-sql-formatter)
 
 **SQL Formatter** is a JavaScript library for pretty-printing SQL queries.
 
@@ -15,20 +15,18 @@ It does not support:
 - Stored procedures.
 - Changing of the delimiter type to something else than `;`.
 
-→ [Try the demo.](https://sql-formatter-org.github.io/sql-formatter)
-
 ## Install
 
 Get the latest version from NPM:
 
 ```sh
-npm install sql-formatter
+npm install @dlh.io/dlh-sql-formatter
 ```
 
 Also available with yarn:
 
 ```sh
-yarn add sql-formatter
+yarn add @dlh.io/dlh-sql-formatter
 ```
 
 ## Usage
@@ -196,24 +194,6 @@ All fields are optional and all fields that are not specified will be filled wit
 If you don't use a module bundler, clone the repository, run `npm install` and grab a file from `/dist` directory to use inside a `<script>` tag.
 This makes SQL Formatter available as a global variable `window.sqlFormatter`.
 
-### Usage in editors
-
-- [VSCode extension](https://marketplace.visualstudio.com/items?itemName=ReneSaarsoo.sql-formatter-vsc)
-  - [Repo](https://github.com/sql-formatter-org/sql-formatter-vscode)
-- [Vim extension](https://github.com/fannheyward/coc-sql/)
-- [Prettier plugin](https://github.com/un-ts/prettier/tree/master/packages/sql)
-
-We provide **JSON Schema** for `.sql-formatter.json` configuration file, enabling autocompletion and IntelliSense support in editors.
-
-- [JSON Schema link](https://raw.githubusercontent.com/sql-formatter-org/sql-formatter/refs/heads/master/schema.json)
-- **Usage Guides:**
-  - [Using the schema in VSCode](https://code.visualstudio.com/docs/languages/json#_mapping-in-the-user-settings)
-  - [Using the schema in Zed](https://zed.dev/docs/languages/json#schema-specification-via-settings)
-
-### Usage as ESLint plugin
-
-- Inside `eslint-plugin-sql` by using the rule [eslint-plugin-sql#format](https://github.com/gajus/eslint-plugin-sql#format).
-
 ## Frequently Asked Questions
 
 ### Parse error: Unexpected ... at line ...
@@ -283,24 +263,6 @@ format('SELECT {col1}, {col2} FROM {tablename};', {
 This won't work for all possible templating constructs,
 but should solve the most common use cases.
 
-## The future
-
-The development of this formatter is currently in maintenance mode.
-Bugs will get fixed if feasible, but new features will likely not be added.
-
-I have started a new SQL formatting tool: [prettier-plugin-sql-cst][].
-
-- It solves several problems which can't be fixed in SQL Formatter because
-  of fundamental problems in its architecture.
-- It makes use of the Prettier layout algorithm,
-  doing a better job of splitting long expressions to multiple lines.
-- It takes much more opinionated approach to SQL formatting,
-  giving only a very limited set of options to adjust the code style.
-- It already has full support for SQLite and BigQuery syntax.
-  It should work for the most common SQL code in various other dialects.
-
-Give it a try if you'd like to take your SQL auto-formatting to the next level.
-
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -308,6 +270,3 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 ## License
 
 [MIT](LICENSE)
-
-[php library]: https://github.com/jdorn/sql-formatter
-[prettier-plugin-sql-cst]: https://github.com/nene/prettier-plugin-sql-cst
