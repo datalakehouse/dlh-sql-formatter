@@ -7,6 +7,8 @@ import { ConfigError, validateConfig } from './validateConfig.js';
 
 const dialectNameMap: Record<keyof typeof allDialects | 'tsql', keyof typeof allDialects> = {
   bigquery: 'bigquery',
+  clickhouse: 'clickhouse',
+  databricks: 'databricks',
   db2: 'db2',
   db2i: 'db2i',
   duckdb: 'duckdb',

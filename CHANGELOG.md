@@ -6,6 +6,34 @@ This project is a fork of [sql-formatter](https://github.com/sql-formatter-org/s
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-XX-XX
+ 
+### Added — New Dialect Support
+- **Databricks SQL** dialect (`language: 'databricks'`)
+- **ClickHouse** dialect (`language: 'clickhouse'`)
+ 
+### Added — Multi-Provider AI Features
+- **4 built-in AI providers**: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek
+- **Custom provider registration** via `registerProvider()` for Ollama, Azure, vLLM, etc.
+- **Auto-detection**: CLI auto-detects provider from whichever API key env var is set
+- **`--ai-provider`** CLI flag to explicitly choose provider
+- **`--ai-model`** CLI flag to override the default model per provider
+- **`--ai-base-url`** CLI flag for proxies, self-hosted, or OpenAI-compatible endpoints
+- **`--suggest`** CLI flag for rule-based analysis (no API key needed)
+- **`--rewrite`** CLI flag for AI-powered SQL rewrite
+- **`BaseProvider`** abstract class — shared prompt/parse logic, providers only implement `callAPI()`
+- **Provider registry** — `registerProvider()`, `listProviders()`, `createProvider()`, `autoDetectProvider()`
+- **15 built-in analysis rules** across common, Snowflake, BigQuery, Redshift, PostgreSQL
+- **Environment variable auto-resolution** per provider:
+  - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`/`GOOGLE_API_KEY`, `DEEPSEEK_API_KEY`
+ 
+### Default models per provider
+| Provider | Default Model |
+|----------|---------------|
+| anthropic | claude-sonnet-4-20250514 |
+| openai | gpt-4o |
+| gemini | gemini-2.0-flash |
+
 ## [1.1.4] - 2025-XX-XX
 
 ### Changed
