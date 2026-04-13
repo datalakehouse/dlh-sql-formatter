@@ -1,6 +1,6 @@
 ---
 name: Generic Bug Report
-about: Report any other problem with SQL formatter (crash, vulnerability, etc)
+about: Report any other problem with DLH SQL Formatter (crash, vulnerability, etc)
 title: 'Issue Title Here'
 labels: bug
 assignees: ''
@@ -19,4 +19,5 @@ What happened instead?
 
 - How are you calling / using the library?
 - What SQL language(s) does this apply to?
-- Which SQL Formatter version are you using?
+- Which DLH SQL Formatter version are you using?
+- Are you using the VS Code extension (DLH SQL Optimizer)?

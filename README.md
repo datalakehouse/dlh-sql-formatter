@@ -1,45 +1,55 @@
 <a href='https://github.com/datalakehouse/dlh-sql-formatter'>
 
-# SQL Formatter [![NPM version](https://img.shields.io/npm/v/@dlh.io/dlh-sql-formatter.svg)](https://npmjs.com/package/@dlh.io/dlh-sql-formatter)
+# DLH SQL Formatter [![NPM version](https://img.shields.io/npm/v/@dlh.io/dlh-sql-formatter.svg)](https://npmjs.com/package/@dlh.io/dlh-sql-formatter)
 
-**SQL Formatter** is a JavaScript library for pretty-printing SQL queries.
+**DLH SQL Formatter** is a JavaScript library for pretty-printing SQL queries, maintained by [DLH.io](https://dlh.io). It is a fork of [sql-formatter](https://github.com/sql-formatter-org/sql-formatter) with DLH-specific enhancements.
 
-It started as a port of a [PHP Library][], but has since considerably diverged.
+> **Looking for the VS Code extension?** Install [DLH SQL Optimizer](https://marketplace.visualstudio.com/items?itemName=DLH.dlh-sql-optimizer) for formatting directly in your editor.
 
-It supports various SQL dialects:
+## What's Different from Upstream?
+
+DLH SQL Formatter builds on the excellent sql-formatter library with the following enhancements:
+
+- **DLH-branded packaging** — published as `@dlh.io/dlh-sql-formatter` on npm for use across DLH products
+- **DuckDB support** — first-class support for DuckDB dialect
+- **Enhanced comma positioning** — improved `leadingWithSpace` comma handling with full comment support
+- **VS Code integration** — paired with the [DLH SQL Optimizer](https://marketplace.visualstudio.com/items?itemName=DLH.dlh-sql-optimizer) extension
+- **Ongoing upstream sync** — bug fixes and improvements from upstream are regularly merged
+
+## Supported SQL Dialects
+
 GCP BigQuery, IBM DB2, DuckDB, Apache Hive, MariaDB, MySQL, TiDB, Couchbase N1QL, Oracle PL/SQL, PostgreSQL, Amazon Redshift, SingleStoreDB, Snowflake, Spark, SQL Server Transact-SQL, Trino (and Presto).
+
 See [language option docs](docs/language.md) for more details.
 
-It does not support:
+### Limitations
 
-- Stored procedures.
-- Changing of the delimiter type to something else than `;`.
+- Stored procedures are not supported.
+- Delimiter type cannot be changed from `;`.
 
 ## Install
-
-Get the latest version from NPM:
 
 ```sh
 npm install @dlh.io/dlh-sql-formatter
 ```
 
-Also available with yarn:
+Or with yarn:
 
 ```sh
 yarn add @dlh.io/dlh-sql-formatter
 ```
 
-## Usage
+## Quick Start
 
-### Usage as library
+### As a Library
 
 ```js
-import { format } from 'sql-formatter';
+import { format } from '@dlh.io/dlh-sql-formatter';
 
 console.log(format('SELECT * FROM tbl', { language: 'mysql' }));
 ```
 
-This will output:
+Output:
 
 ```sql
 SELECT
@@ -48,7 +58,7 @@ FROM
   tbl
 ```
 
-You can also pass in configuration options:
+With configuration options:
 
 ```js
 format('SELECT * FROM tbl', {
@@ -59,9 +69,9 @@ format('SELECT * FROM tbl', {
 });
 ```
 
-### Disabling the formatter
+### Disabling the Formatter
 
-You can disable the formatter for a section of SQL by surrounding it with disable/enable comments:
+Wrap sections with disable/enable comments to skip formatting:
 
 ```sql
 /* sql-formatter-disable */
@@ -70,7 +80,7 @@ SELECT * FROM tbl1;
 SELECT * FROM tbl2;
 ```
 
-which produces:
+Output:
 
 ```sql
 /* sql-formatter-disable */
@@ -82,14 +92,7 @@ FROM
   tbl2;
 ```
 
-The formatter doesn't even parse the code between these comments.
-So in case there's some SQL that happens to crash SQL Formatter,
-you can comment the culprit out (at least until the issue gets
-fixed in SQL Formatter).
-
-### Placeholders replacement
-
-In addition to formatting, this library can also perform placeholder replacement in prepared SQL statements:
+### Placeholder Replacement
 
 ```js
 format('SELECT * FROM tbl WHERE foo = ?', {
@@ -97,7 +100,7 @@ format('SELECT * FROM tbl WHERE foo = ?', {
 });
 ```
 
-Results in:
+Output:
 
 ```sql
 SELECT
@@ -110,18 +113,17 @@ WHERE
 
 For more details see [docs of params option.](docs/params.md)
 
-### Usage from command line
+### Command Line Usage
 
-The CLI tool will be installed under `sql-formatter`
-and may be invoked via `npx sql-formatter`:
+The CLI tool is installed as `dlh-sql-formatter`:
 
 ```sh
-sql-formatter -h
+npx @dlh.io/dlh-sql-formatter -h
 ```
 
 ```
-usage: sql-formatter [-h] [-o OUTPUT] \
-[-l {bigquery,db2,db2i,hive,mariadb,mysql,n1ql,plsql,postgresql,redshift,singlestoredb,snowflake,spark,sql,sqlite,tidb,transactsql,trino,tsql}] [-c CONFIG] [--version] [FILE]
+usage: dlh-sql-formatter [-h] [-o OUTPUT] \
+[-l {bigquery,db2,db2i,duckdb,hive,mariadb,mysql,n1ql,plsql,postgresql,redshift,singlestoredb,snowflake,spark,sql,sqlite,tidb,transactsql,trino,tsql}] [-c CONFIG] [--version] [FILE]
 
 SQL Formatter
 
@@ -133,33 +135,25 @@ optional arguments:
   -o, --output    OUTPUT
                     File to write SQL output (defaults to stdout)
   --fix           Update the file in-place
-  -l, --language  {bigquery,db2,db2i,hive,mariadb,mysql,n1ql,plsql,postgresql,redshift,singlestoredb,snowflake,spark,sql,sqlite,tidb,trino,tsql}
-                    SQL dialect (defaults to basic sql)
+  -l, --language  SQL dialect (defaults to basic sql)
   -c, --config    CONFIG
-                    Path to config JSON file or json string (will find a file named '.sql-formatter.json' or use default configs if unspecified)
+                    Path to config JSON file or json string
   --version       show program's version number and exit
 ```
 
-By default, the tool takes queries from stdin and processes them to stdout but
-one can also name an input file name or use the `--output` option.
+Example:
 
 ```sh
-echo 'select * from tbl where id = 3' | sql-formatter
+echo 'select * from tbl where id = 3' | npx @dlh.io/dlh-sql-formatter
 ```
 
-```sql
-select
-  *
-from
-  tbl
-where
-  id = 3
-```
+### Configuration File
 
-The tool also accepts a JSON config file named .sql-formatter.json in the current or any parent directory, or with the `--config` option that takes this form:
+The tool accepts a JSON config file named `.sql-formatter.json` in the current or any parent directory, or via the `--config` option:
 
 ```json
 {
+  "$schema": "https://raw.githubusercontent.com/datalakehouse/dlh-sql-formatter/master/schema.json",
   "language": "spark",
   "tabWidth": 2,
   "keywordCase": "upper",
@@ -167,9 +161,11 @@ The tool also accepts a JSON config file named .sql-formatter.json in the curren
 }
 ```
 
-All fields are optional and all fields that are not specified will be filled with their default values.
+> **Tip:** Add the `$schema` field to get autocomplete and validation in VS Code and other editors that support JSON Schema.
 
-### Configuration options
+All fields are optional and unspecified fields use their default values.
+
+### Configuration Options
 
 - [**`language`**](docs/language.md) the SQL dialect to use (when using `format()`).
 - [**`dialect`**](docs/dialect.md) the SQL dialect to use (when using `formatDialect()` since version 12).
@@ -194,6 +190,22 @@ All fields are optional and all fields that are not specified will be filled wit
 If you don't use a module bundler, clone the repository, run `npm install` and grab a file from `/dist` directory to use inside a `<script>` tag.
 This makes SQL Formatter available as a global variable `window.sqlFormatter`.
 
+## Editor Integration
+
+### VS Code
+
+Install the [DLH SQL Optimizer](https://marketplace.visualstudio.com/items?itemName=DLH.dlh-sql-optimizer) extension for VS Code to format SQL files directly in your editor.
+
+### JSON Schema for Config
+
+Add the `$schema` property to your `.sql-formatter.json` for editor autocomplete:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/datalakehouse/dlh-sql-formatter/master/schema.json"
+}
+```
+
 ## Frequently Asked Questions
 
 ### Parse error: Unexpected ... at line ...
@@ -206,53 +218,19 @@ format('select [col] from tbl');
 // Throws: Parse error: Unexpected "[col] from" at line 1 column 8
 ```
 
-pick the proper dialect, like:
+Pick the proper dialect:
 
 ```js
 format('select [col] from tbl', { language: 'transactsql' });
 ```
 
-Or when using the VSCode extension: Settings -> SQL-Formatter-VSCode -> Dialect.
+Or when using the VS Code extension: Settings → DLH SQL Optimizer → Dialect.
 
-### Module parse failed: Unexpected token
-
-This typically happens when bundling an application with Webpack.
-The cause is that Babel (through `babel-loader`) is not configured
-to support class properties syntax:
-
-```
-    | export default class ExpressionFormatter {
-    >   inline = false;
-```
-
-This syntax is widely supported in all major browsers (except old IE)
-and support for it is included to the default `@babel/preset-env`.
-
-Possible fixes:
-
-- Update to newer Babel / Webpack
-- Switch to `@babel/preset-env`
-- Include plugin `@babel/plugin-proposal-class-properties`
-
-### I'm having a problem with Prettier SQL VSCode extension
-
-The [Prettier SQL VSCode](https://marketplace.visualstudio.com/items?itemName=inferrinizzard.prettier-sql-vscode)
-extension is no more maintained by its author.
-
-Please use the official [SQL Formatter VSCode](https://marketplace.visualstudio.com/items?itemName=ReneSaarsoo.sql-formatter-vsc)
-extension to get the latest fixes from SQL Formatter library.
+The error message includes line and column information to help you locate the issue. Common causes include unsupported syntax for the selected dialect, unclosed strings or brackets, and template syntax that needs `paramTypes` configuration.
 
 ### My SQL contains templating syntax which SQL Formatter fails to parse
 
-For example, you might have an SQL like:
-
-```sql
-SELECT {col1}, {col2} FROM {tablename}
-```
-
-While templating is not directly supported by SQL Formatter, the workaround
-is to use [paramTypes](docs/paramTypes.md) config option to treat these
-occurrences of templating constructs as prepared-statement parameter-placeholders:
+Use the [paramTypes](docs/paramTypes.md) config option to treat templating constructs as parameter placeholders:
 
 ```js
 format('SELECT {col1}, {col2} FROM {tablename};', {
@@ -260,12 +238,13 @@ format('SELECT {col1}, {col2} FROM {tablename};', {
 });
 ```
 
-This won't work for all possible templating constructs,
-but should solve the most common use cases.
-
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Upstream Sync
+
+This project regularly syncs with [sql-formatter-org/sql-formatter](https://github.com/sql-formatter-org/sql-formatter) to incorporate upstream bug fixes. See [CHANGELOG.md](CHANGELOG.md) for details on what has been merged.
 
 ## License
 

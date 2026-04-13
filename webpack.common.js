@@ -4,7 +4,7 @@ export default {
   entry: './src/index.ts',
   output: {
     path: path.resolve('./dist'),
-    filename: 'sql-formatter.cjs',
+    filename: 'dlh-sql-formatter.cjs',
     library: 'sqlFormatter',
     libraryTarget: 'umd',
     globalObject: 'this',

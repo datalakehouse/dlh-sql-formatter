@@ -27,7 +27,7 @@ class SqlFormatterCli {
   getParser() {
     const parser = new ArgumentParser({
       add_help: true,
-      description: 'SQL Formatter',
+      description: 'DLH SQL Formatter',
     });
 
     parser.add_argument('file', {
@@ -136,7 +136,7 @@ class SqlFormatterCli {
     } catch (e) {
       this.exitWhenIOError(e, filename);
       console.error('An unknown error has occurred, please file a bug report at:');
-      console.log('https://github.com/sql-formatter-org/sql-formatter/issues\n');
+      console.log('https://github.com/datalakehouse/dlh-sql-formatter/issues\n');
       throw e;
     }
   }

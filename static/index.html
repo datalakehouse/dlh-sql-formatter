@@ -4,15 +4,15 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>SQL Formatter</title>
-    <meta property="og:title" content="SQL Formatter" />
+    <title>DLH SQL Formatter</title>
+    <meta property="og:title" content="DLH SQL Formatter" />
 
-    <meta name="description" content="A whitespace formatter for different query languages" />
+    <meta name="description" content="A whitespace formatter for different query languages by DLH.io" />
     <meta
       property="og:description"
-      content="A whitespace formatter for different query languages"
+      content="A whitespace formatter for different query languages by DLH.io"
     />
-    <meta property="og:url" content="https://sql-formatter-org.github.io/sql-formatter" />
+    <meta property="og:url" content="https://github.com/datalakehouse/dlh-sql-formatter" />
 
     <link rel="shortcut icon" href="./sql-formatter-icon.png" />
 
@@ -24,20 +24,23 @@
   <body>
     <header>
       <img src="./sql-formatter-icon.png" height="32" width="32" alt="logo" />
-      <h1 class="title">SQL Formatter</h1>
+      <h1 class="title">DLH SQL Formatter</h1>
 
       <div class="buttons">
-        <a href="https://www.npmjs.com/package/sql-formatter">
-          <img src="https://img.shields.io/npm/v/sql-formatter.svg" height="18" />
+        <a href="https://www.npmjs.com/package/@dlh.io/dlh-sql-formatter">
+          <img src="https://img.shields.io/npm/v/@dlh.io/dlh-sql-formatter.svg" height="18" />
         </a>
         <iframe
-          src="https://ghbtns.com/github-btn.html?user=sql-formatter-org&repo=sql-formatter&type=star&count=true"
+          src="https://ghbtns.com/github-btn.html?user=datalakehouse&repo=dlh-sql-formatter&type=star&count=true"
           frameborder="0"
           scrolling="0"
           width="120px"
           height="20px"
           style="position: relative; top: 1px"
         ></iframe>
+        <a href="https://marketplace.visualstudio.com/items?itemName=DLH.dlh-sql-optimizer" style="margin-left: 10px; font-size: 0.85em; color: #0066cc;">
+          VS Code Extension
+        </a>
       </div>
     </header>
     <main>
@@ -125,6 +128,14 @@
             </select>
           </article>
           <article class="config">
+            <label for="commaPosition">Comma position:</label>
+            <select id="commaPosition">
+              <option value="trailing">Trailing</option>
+              <option value="leading">Leading</option>
+              <option value="leadingWithSpace">Leading with space</option>
+            </select>
+          </article>
+          <article class="config">
             <label for="expressionWidth">Expression width:</label>
             <input
               type="number"
@@ -175,7 +186,7 @@ order by supplier_name asc,city desc;</textarea
 
     <script
       type="text/javascript"
-      src="https://unpkg.com/sql-formatter@latest/dist/sql-formatter.min.js"
+      src="https://unpkg.com/@dlh.io/dlh-sql-formatter@latest/dist/dlh-sql-formatter.min.js"
     ></script>
     <script type="text/javascript" src="index.js"></script>
   </body>

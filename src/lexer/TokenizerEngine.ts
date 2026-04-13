@@ -58,9 +58,17 @@ export default class TokenizerEngine {
   private createParseError(): Error {
     const text = this.input.slice(this.index, this.index + 10);
     const { line, col } = lineColFromIndex(this.input, this.index);
-    return new Error(
-      `Parse error: Unexpected "${text}" at line ${line} column ${col}.\n${this.dialectInfo()}`
-    );
+    const errorChar = this.input[this.index];
+
+    let message = `Parse error: Unexpected "${text}" at line ${line} column ${col}.`;
+    message += '\n' + this.dialectInfo();
+
+    const suggestion = this.getSuggestion(errorChar);
+    if (suggestion) {
+      message += '\n' + suggestion;
+    }
+
+    return new Error(message);
   }
 
   private dialectInfo(): string {
@@ -72,6 +80,57 @@ export default class TokenizerEngine {
     } else {
       return `SQL dialect used: "${this.dialectName}".`;
     }
+  }
+
+  private getSuggestion(char: string): string | undefined {
+    // Common issues and their suggestions
+    if (char === '@') {
+      return (
+        'Hint: "@" is not supported in the current dialect. ' +
+        'If this is a parameter placeholder, configure paramTypes: { named: ["@"] }. ' +
+        'If this is dialect-specific syntax, try a different language option (e.g., "transactsql", "mysql").'
+      );
+    }
+    if (char === ':') {
+      return (
+        'Hint: ":" is not supported in the current dialect. ' +
+        'If this is a named parameter placeholder, configure paramTypes: { named: [":"] }.'
+      );
+    }
+    if (char === '$') {
+      return (
+        'Hint: "$" is not supported in the current dialect. ' +
+        'If this is a parameter placeholder, configure paramTypes: { named: ["$"] } or { numbered: ["$"] }. ' +
+        'If this is dialect-specific syntax, try "postgresql" or "snowflake" language.'
+      );
+    }
+    if (char === '{') {
+      return (
+        'Hint: Curly braces are not supported in the current dialect. ' +
+        'If this is template syntax, configure paramTypes with a custom regex: ' +
+        'paramTypes: { custom: [{ regex: "\\\\{\\\\w+\\\\}" }] }.'
+      );
+    }
+    if (char === '[') {
+      return (
+        'Hint: Square brackets are not supported as identifiers in the current dialect. ' +
+        'Try using the "transactsql" or "sqlite" language option.'
+      );
+    }
+    if (char === '#') {
+      return (
+        'Hint: "#" is not supported in the current dialect. ' +
+        'If this is a line comment, try "mysql" or "mariadb" language. ' +
+        'If this is a temp table prefix, try "transactsql" language.'
+      );
+    }
+    if (char === '`') {
+      return (
+        'Hint: Backtick identifiers are not supported in the current dialect. ' +
+        'Try using "mysql", "mariadb", "spark", or "bigquery" language option.'
+      );
+    }
+    return undefined;
   }
 
   private getWhitespace(): string | undefined {

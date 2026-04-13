@@ -1,4 +1,4 @@
-export { supportedDialects, format, formatDialect } from './sqlFormatter.js';
+export { supportedDialects, format, formatDialect, validate } from './sqlFormatter.js';
 export { expandPhrases } from './expandPhrases.js';
 export { ConfigError } from './validateConfig.js';
 
@@ -29,6 +29,8 @@ export type {
   SqlLanguage,
   FormatOptionsWithLanguage,
   FormatOptionsWithDialect,
+  ValidationResult,
+  ValidationError,
 } from './sqlFormatter.js';
 export type {
   IndentStyle,
