@@ -1,9 +1,11 @@
-export { supportedDialects, format, formatDialect } from './sqlFormatter.js';
+export { supportedDialects, format, formatDialect, validate } from './sqlFormatter.js';
 export { expandPhrases } from './expandPhrases.js';
 export { ConfigError } from './validateConfig.js';
 
 // When adding a new dialect, be sure to add it to the list of exports below.
 export { bigquery } from './languages/bigquery/bigquery.formatter.js';
+export { clickhouse } from './languages/clickhouse/clickhouse.formatter.js';
+export { databricks } from './languages/databricks/databricks.formatter.js';
 export { db2 } from './languages/db2/db2.formatter.js';
 export { db2i } from './languages/db2i/db2i.formatter.js';
 export { duckdb } from './languages/duckdb/duckdb.formatter.js';
@@ -29,6 +31,8 @@ export type {
   SqlLanguage,
   FormatOptionsWithLanguage,
   FormatOptionsWithDialect,
+  ValidationResult,
+  ValidationError,
 } from './sqlFormatter.js';
 export type {
   IndentStyle,

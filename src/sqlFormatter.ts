@@ -7,6 +7,8 @@ import { ConfigError, validateConfig } from './validateConfig.js';
 
 const dialectNameMap: Record<keyof typeof allDialects | 'tsql', keyof typeof allDialects> = {
   bigquery: 'bigquery',
+  clickhouse: 'clickhouse',
+  databricks: 'databricks',
   db2: 'db2',
   db2i: 'db2i',
   duckdb: 'duckdb',
@@ -97,6 +99,47 @@ export const formatDialect = (
   });
 
   return new Formatter(createDialect(dialect), options).format(query);
+};
+
+export interface ValidationResult {
+  valid: boolean;
+  errors: ValidationError[];
+}
+
+export interface ValidationError {
+  message: string;
+  line?: number;
+  column?: number;
+}
+
+/**
+ * Validates SQL syntax by attempting to parse and format it.
+ * Returns a result object indicating whether the SQL is valid
+ * and any errors encountered.
+ *
+ * @param {string} query - input SQL query string
+ * @param {FormatOptionsWithLanguage} cfg Configuration options
+ * @return {ValidationResult} validation result with any errors
+ */
+export const validate = (query: string, cfg: FormatOptionsWithLanguage = {}): ValidationResult => {
+  try {
+    format(query, cfg);
+    return { valid: true, errors: [] };
+  } catch (e) {
+    const error = e as Error;
+    const lineColMatch = error.message.match(/line (\d+) column (\d+)/);
+    const validationError: ValidationError = {
+      message: error.message,
+    };
+    if (lineColMatch) {
+      validationError.line = parseInt(lineColMatch[1], 10);
+      validationError.column = parseInt(lineColMatch[2], 10);
+    }
+    return {
+      valid: false,
+      errors: [validationError],
+    };
+  }
 };
 
 export type FormatFn = typeof format;

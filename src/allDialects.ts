@@ -1,4 +1,6 @@
 export { bigquery } from './languages/bigquery/bigquery.formatter.js';
+export { clickhouse } from './languages/clickhouse/clickhouse.formatter.js';
+export { databricks } from './languages/databricks/databricks.formatter.js';
 export { db2 } from './languages/db2/db2.formatter.js';
 export { db2i } from './languages/db2i/db2i.formatter.js';
 export { duckdb } from './languages/duckdb/duckdb.formatter.js';

@@ -14,7 +14,11 @@ export function validateConfig(cfg: FormatOptions): FormatOptions {
   ];
   for (const optionName of removedOptions) {
     if (optionName in cfg) {
-      throw new ConfigError(`${optionName} config is no more supported.`);
+      throw new ConfigError(
+        `${optionName} config is no more supported. ` +
+          `See the migration guide for alternatives: ` +
+          `https://github.com/datalakehouse/dlh-sql-formatter#configuration-options`
+      );
     }
   }
 
