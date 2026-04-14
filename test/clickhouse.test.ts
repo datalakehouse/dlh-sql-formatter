@@ -135,7 +135,7 @@ describe('ClickHouseFormatter', () => {
         *
       FROM
         tbl
-      LIMIT BY
+      LIMIT
         5 BY user_id;
     `);
   });

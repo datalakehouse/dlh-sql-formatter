@@ -99,7 +99,7 @@ const tabularOnelineClauses = expandPhrases([
   'SHOW CREATE DATABASE',
   'SHOW PROCESSLIST',
   'DESCRIBE [TABLE]',
-  'DESC [TABLE]',
+  'DESC TABLE',
   'EXISTS [TABLE]',
   'USE',
   'EXPLAIN',

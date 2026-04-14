@@ -1,7 +1,6 @@
 export const functions: string[] = [
   // https://clickhouse.com/docs/en/sql-reference/functions
   // Aggregate functions
-  'ANY',
   'ANYHEAVY',
   'ANYLAST',
   'ANYIF',

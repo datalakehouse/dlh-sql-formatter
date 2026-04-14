@@ -215,6 +215,8 @@ export const dataTypes: string[] = [
   'FLOAT32',
   'FLOAT64',
   'GEO',
+  'INT',
+  'INTEGER',
   'INT8',
   'INT16',
   'INT32',
