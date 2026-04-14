@@ -1,6 +1,6 @@
 {
   "name": "@dlh.io/dlh-sql-formatter",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "publisher": "DLH",
   "description": "Format whitespace in a SQL query to make it more readable",
   "license": "MIT",
@@ -12,6 +12,10 @@
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
+    },
+    "./ai": {
+      "import": "./dist/esm/ai/index.js",
+      "require": "./dist/cjs/ai/index.js"
     }
   },
   "bin": {
@@ -44,7 +48,9 @@
     "presto",
     "prestosql",
     "snowflake",
-    "duckdb"
+    "duckdb",
+    "databricks",
+    "clickhouse"
   ],
   "files": [
     "dist",
@@ -89,6 +95,14 @@
   "dependencies": {
     "argparse": "^2.0.1",
     "nearley": "^2.20.1"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": ">=0.20.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",

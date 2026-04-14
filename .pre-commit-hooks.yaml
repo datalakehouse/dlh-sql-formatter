@@ -1,6 +1,6 @@
-- id: sql-formatter
-  name: sql-formatter
-  description: 'Reformat SQL files with sql-formatter'
-  entry: sql-formatter --fix
+- id: dlh-sql-formatter
+  name: dlh-sql-formatter
+  description: 'Reformat SQL files with dlh-sql-formatter'
+  entry: dlh-sql-formatter --fix
   language: node
   types: [sql]

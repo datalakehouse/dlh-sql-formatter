@@ -12,6 +12,7 @@ const attachFormat = () => {
   const identifierCase = document.getElementById('identifierCase');
   const indentStyle = document.getElementById('indentStyle');
   const logicalOperatorNewline = document.getElementById('logicalOperatorNewline');
+  const commaPosition = document.getElementById('commaPosition');
   const expressionWidth = document.getElementById('expressionWidth');
   const lineBetweenQueries = document.getElementById('lineBetweenQueries');
   const denseOperators = document.getElementById('denseOperators');
@@ -42,6 +43,7 @@ const attachFormat = () => {
         indentStyle: indentStyle.options[indentStyle.selectedIndex].value,
         logicalOperatorNewline:
           logicalOperatorNewline.options[logicalOperatorNewline.selectedIndex].value,
+        commaPosition: commaPosition.options[commaPosition.selectedIndex].value,
         expressionWidth: expressionWidth.value,
         lineBetweenQueries: lineBetweenQueries.value,
         denseOperators: denseOperators.checked,
@@ -58,7 +60,7 @@ const attachFormat = () => {
 <p><strong>${e.message}</strong></p>
 <p>
   Please report this at
-  <a href="https://github.com/sql-formatter-org/sql-formatter/issues">Github issues page.<a>
+  <a href="https://github.com/datalakehouse/dlh-sql-formatter/issues">Github issues page.<a>
 </p>
 <p>Stack Trace:</p>
 <pre>${e.stack.toString()}</pre>
@@ -79,6 +81,7 @@ const attachFormat = () => {
     identifierCase,
     indentStyle,
     logicalOperatorNewline,
+    commaPosition,
     expressionWidth,
     lineBetweenQueries,
     denseOperators,
