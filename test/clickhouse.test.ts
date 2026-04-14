@@ -8,7 +8,6 @@ import supportsDropTable from './features/dropTable.js';
 import supportsAlterTable from './features/alterTable.js';
 import supportsStrings from './features/strings.js';
 import supportsBetween from './features/between.js';
-import supportsJoin from './features/join.js';
 import supportsOperators from './features/operators.js';
 import supportsComments from './features/comments.js';
 import supportsIdentifiers from './features/identifiers.js';
@@ -88,9 +87,8 @@ describe('ClickHouseFormatter', () => {
   });
 
   it('formats SETTINGS clause', () => {
-    expect(
-      format("SELECT * FROM tbl SETTINGS max_threads = 4, max_memory_usage = '10G';")
-    ).toBe(dedent`
+    expect(format("SELECT * FROM tbl SETTINGS max_threads = 4, max_memory_usage = '10G';"))
+      .toBe(dedent`
       SELECT
         *
       FROM
@@ -148,9 +146,8 @@ describe('ClickHouseFormatter', () => {
   });
 
   it('formats WITH TOTALS clause', () => {
-    expect(
-      format('SELECT region, SUM(amount) FROM sales GROUP BY region WITH TOTALS;')
-    ).toBe(dedent`
+    expect(format('SELECT region, SUM(amount) FROM sales GROUP BY region WITH TOTALS;'))
+      .toBe(dedent`
       SELECT
         region,
         SUM(amount)
@@ -163,9 +160,7 @@ describe('ClickHouseFormatter', () => {
   });
 
   it('formats ARRAY JOIN', () => {
-    expect(
-      format('SELECT s, arr FROM arrays_test ARRAY JOIN arr;')
-    ).toBe(dedent`
+    expect(format('SELECT s, arr FROM arrays_test ARRAY JOIN arr;')).toBe(dedent`
       SELECT
         s,
         arr

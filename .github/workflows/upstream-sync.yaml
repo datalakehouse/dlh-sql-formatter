@@ -3,7 +3,7 @@ name: Upstream Sync Check
 on:
   schedule:
     # Check for upstream changes weekly on Monday at 9am UTC
-    - cron: "0 9 * * 1"
+    - cron: '0 9 * * 1'
   workflow_dispatch:
 
 jobs:

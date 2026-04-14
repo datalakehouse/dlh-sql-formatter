@@ -7,12 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] - 2025-XX-XX
- 
+
 ### Added — New Dialect Support
+
 - **Databricks SQL** dialect (`language: 'databricks'`)
 - **ClickHouse** dialect (`language: 'clickhouse'`)
- 
+
 ### Added — Multi-Provider AI Features
+
 - **4 built-in AI providers**: Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek
 - **Custom provider registration** via `registerProvider()` for Ollama, Azure, vLLM, etc.
 - **Auto-detection**: CLI auto-detects provider from whichever API key env var is set
@@ -26,17 +28,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **15 built-in analysis rules** across common, Snowflake, BigQuery, Redshift, PostgreSQL
 - **Environment variable auto-resolution** per provider:
   - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`/`GOOGLE_API_KEY`, `DEEPSEEK_API_KEY`
- 
+
 ### Default models per provider
-| Provider | Default Model |
-|----------|---------------|
+
+| Provider  | Default Model            |
+| --------- | ------------------------ |
 | anthropic | claude-sonnet-4-20250514 |
-| openai | gpt-4o |
-| gemini | gemini-2.0-flash |
+| openai    | gpt-4o                   |
+| gemini    | gemini-2.0-flash         |
 
 ## [1.1.4] - 2025-XX-XX
 
 ### Changed
+
 - Updated README with DLH branding and differentiation from upstream
 - Fixed demo page link to point to DLH resources
 - Added JSON Schema `$schema` support documentation for editor autocomplete
@@ -44,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added CHANGELOG.md for tracking DLH-specific changes
 
 ### Added
+
 - CHANGELOG.md for tracking DLH-specific divergences from upstream
 - GitHub Actions CI workflow for automated testing on pull requests
 - GitHub Actions workflow for automated upstream sync checks
@@ -53,11 +58,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.3] - Initial DLH Fork
 
 ### Changed
+
 - Rebranded package as `@dlh.io/dlh-sql-formatter`
 - Updated package.json with DLH metadata
 - CLI binary renamed to `dlh-sql-formatter`
 
 ### Inherited from upstream
+
 - All features from sql-formatter up to the fork point
 - Support for 19 SQL dialects including DuckDB
 - Full formatting configuration options

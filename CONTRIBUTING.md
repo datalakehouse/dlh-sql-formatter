@@ -15,6 +15,7 @@ Tests that apply to all languages should be in `behavesLikeSqlFormatter.ts`.
 ## CI
 
 Pull requests are automatically tested via GitHub Actions. The CI pipeline runs:
+
 - Tests across Node.js 16, 18, and 20
 - TypeScript type checking
 - ESLint linting

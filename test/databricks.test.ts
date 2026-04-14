@@ -133,9 +133,7 @@ describe('DatabricksFormatter', () => {
   // --- COPY INTO ---
 
   it('formats COPY INTO statement', () => {
-    expect(
-      format(`COPY INTO my_table FROM '/path/to/files' FILEFORMAT = CSV;`)
-    ).toBe(dedent`
+    expect(format(`COPY INTO my_table FROM '/path/to/files' FILEFORMAT = CSV;`)).toBe(dedent`
       COPY INTO my_table
       FROM
         '/path/to/files' FILEFORMAT = CSV;
@@ -329,9 +327,7 @@ describe('DatabricksFormatter', () => {
   // --- LATERAL VIEW ---
 
   it('formats LATERAL VIEW', () => {
-    expect(
-      format('SELECT id, val FROM tbl LATERAL VIEW EXPLODE(arr) t AS val;')
-    ).toBe(dedent`
+    expect(format('SELECT id, val FROM tbl LATERAL VIEW EXPLODE(arr) t AS val;')).toBe(dedent`
       SELECT
         id,
         val
@@ -415,9 +411,8 @@ describe('DatabricksFormatter', () => {
   // --- CREATE MATERIALIZED VIEW ---
 
   it('formats CREATE MATERIALIZED VIEW', () => {
-    expect(
-      format('CREATE MATERIALIZED VIEW IF NOT EXISTS my_view AS SELECT * FROM tbl;')
-    ).toBe(dedent`
+    expect(format('CREATE MATERIALIZED VIEW IF NOT EXISTS my_view AS SELECT * FROM tbl;'))
+      .toBe(dedent`
       CREATE MATERIALIZED VIEW IF NOT EXISTS my_view AS
       SELECT
         *
