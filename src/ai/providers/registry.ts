@@ -131,22 +131,22 @@ export function autoDetectProvider(): ProviderName {
 export function createProvider(config: AIConfig): AIProvider {
   const apiKey = resolveApiKey(config);
   const model = config.model ?? DEFAULT_MODELS[config.provider as BuiltinProviderName] ?? '';
-  const { baseUrl } = config;
+  const { baseUrl, rewritePrompt } = config;
   const opts = config.providerOptions ?? {};
 
   switch (config.provider) {
     case 'rule-based':
       return new RuleBasedProvider();
     case 'anthropic':
-      return new AnthropicProvider(apiKey, model, baseUrl, opts);
+      return new AnthropicProvider(apiKey, model, baseUrl, opts, rewritePrompt);
     case 'openai':
-      return new OpenAIProvider(apiKey, model, baseUrl, opts);
+      return new OpenAIProvider(apiKey, model, baseUrl, opts, rewritePrompt);
     case 'gemini':
-      return new GeminiProvider(apiKey, model, baseUrl, opts);
+      return new GeminiProvider(apiKey, model, baseUrl, opts, rewritePrompt);
     default: {
       const factory = customProviders.get(config.provider);
       if (factory) {
-        return factory(apiKey, model, baseUrl, opts);
+        return factory(apiKey, model, baseUrl, opts, rewritePrompt);
       }
       throw new Error(
         `Unknown AI provider: "${config.provider}". ` +

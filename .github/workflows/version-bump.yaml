@@ -1,0 +1,48 @@
+name: Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Semver bump'
+        type: choice
+        options: [patch, minor, major]
+        required: true
+      preid:
+        description: 'Optional pre-release identifier (e.g. rc, beta) — leave blank for a stable release'
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+
+      - run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version and tag
+        run: |
+          if [ -n "${{ inputs.preid }}" ]; then
+            npm version "pre${{ inputs.bump }}" --preid="${{ inputs.preid }}" -m "chore: release v%s"
+          else
+            npm version "${{ inputs.bump }}" -m "chore: release v%s"
+          fi
+          git push --follow-tags

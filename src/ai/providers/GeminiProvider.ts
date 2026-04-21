@@ -1,4 +1,4 @@
-import { DEFAULT_MODELS } from '../types.js';
+import { DEFAULT_MODELS, AIConfig } from '../types.js';
 import { BaseProvider } from './BaseProvider.js';
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
@@ -11,14 +11,16 @@ export class GeminiProvider extends BaseProvider {
     apiKey: string,
     model?: string,
     baseUrl?: string,
-    providerOptions?: Record<string, unknown>
+    providerOptions?: Record<string, unknown>,
+    rewritePrompt?: AIConfig['rewritePrompt']
   ) {
     super(
       'gemini',
       apiKey,
       model ?? DEFAULT_MODELS.gemini,
       baseUrl ?? DEFAULT_BASE_URL,
-      providerOptions
+      providerOptions,
+      rewritePrompt
     );
   }
 
