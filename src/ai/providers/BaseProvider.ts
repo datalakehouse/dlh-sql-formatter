@@ -1,11 +1,13 @@
 import {
   AIProvider,
+  AIConfig,
   Suggestion,
   Optimization,
   ENV_KEY_NAMES,
   BuiltinProviderName,
 } from '../types.js';
 import { analyzeSQL } from '../rules/index.js';
+import { buildDefaultRewriteSystemPrompt } from '../defaultPrompts.js';
 
 /**
  * Abstract base class for all LLM-backed providers.
@@ -19,13 +21,15 @@ export abstract class BaseProvider implements AIProvider {
   protected model: string;
   protected baseUrl: string;
   protected providerOptions: Record<string, unknown>;
+  protected rewritePrompt?: AIConfig['rewritePrompt'];
 
   constructor(
     name: string,
     apiKey: string,
     model: string,
     baseUrl: string,
-    providerOptions: Record<string, unknown> = {}
+    providerOptions: Record<string, unknown> = {},
+    rewritePrompt?: AIConfig['rewritePrompt']
   ) {
     this.name = name;
     if (!apiKey) {
@@ -42,6 +46,7 @@ export abstract class BaseProvider implements AIProvider {
     this.model = model;
     this.baseUrl = baseUrl;
     this.providerOptions = providerOptions;
+    this.rewritePrompt = rewritePrompt;
   }
 
   async suggest(sql: string, dialect?: string): Promise<Suggestion[]> {
@@ -93,16 +98,16 @@ Focus on actionable, specific suggestions. Don't repeat obvious things.`;
   }
 
   protected buildRewriteSystemPrompt(dialect?: string): string {
-    const dialectInfo = dialect ? ` for ${dialect}` : '';
-    return `You are an expert SQL optimizer${dialectInfo}.
-Given a SQL query, rewrite it for better performance, clarity, and best practices.
-Return a JSON object with exactly these fields:
-- "sql": the rewritten SQL query (string)
-- "explanation": a brief explanation of changes made (string)
-- "optimizations": array of objects, each with: type, description, originalLine (optional number), suggestedChange (string)
-
-Return ONLY the JSON object, no markdown code fences, no other text.
-Preserve the original query semantics. Only suggest changes you're confident about.`;
+    const def = buildDefaultRewriteSystemPrompt(dialect);
+    const ov = this.rewritePrompt;
+    const customText = ov?.text?.trim() ?? '';
+    if (!ov || ov.mode === 'default' || !customText) {
+      return def;
+    }
+    if (ov.mode === 'replace') {
+      return customText;
+    }
+    return `${def}\n\nAdditional guidance:\n${customText}`;
   }
 
   // -----------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import { DEFAULT_MODELS } from '../types.js';
+import { DEFAULT_MODELS, AIConfig } from '../types.js';
 import { BaseProvider } from './BaseProvider.js';
 
 const DEFAULT_BASE_URL = 'https://api.openai.com';
@@ -13,14 +13,16 @@ export class OpenAIProvider extends BaseProvider {
     apiKey: string,
     model?: string,
     baseUrl?: string,
-    providerOptions?: Record<string, unknown>
+    providerOptions?: Record<string, unknown>,
+    rewritePrompt?: AIConfig['rewritePrompt']
   ) {
     super(
       'openai',
       apiKey,
       model ?? DEFAULT_MODELS.openai,
       baseUrl ?? DEFAULT_BASE_URL,
-      providerOptions
+      providerOptions,
+      rewritePrompt
     );
   }
 
