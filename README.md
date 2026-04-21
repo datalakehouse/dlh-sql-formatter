@@ -13,6 +13,8 @@ DLH SQL Formatter builds on the excellent sql-formatter library with the followi
 - **DLH-branded packaging** — published as `@dlh.io/dlh-sql-formatter` on npm for use across DLH products
 - **DuckDB support** — first-class support for DuckDB dialect
 - **Enhanced comma positioning** — improved `leadingWithSpace` comma handling with full comment support
+- **AI features** — multi-provider (`anthropic` / `openai` / `gemini` / `ollama` / custom) SQL rewrite and suggestions via `@dlh.io/dlh-sql-formatter/ai`
+- **DLH default rewrite prompt** (v1.3.0+) — an opinionated, warehouse-aware system prompt ships as the default for AI rewrites, overridable per call
 - **VS Code integration** — paired with the [DLH SQL Optimizer](https://marketplace.visualstudio.com/items?itemName=DLH.dlh-sql-optimizer) extension
 - **Ongoing upstream sync** — bug fixes and improvements from upstream are regularly merged
 
@@ -189,6 +191,66 @@ All fields are optional and unspecified fields use their default values.
 
 If you don't use a module bundler, clone the repository, run `npm install` and grab a file from `/dist` directory to use inside a `<script>` tag.
 This makes SQL Formatter available as a global variable `window.sqlFormatter`.
+
+## AI-Powered Rewrites
+
+The `@dlh.io/dlh-sql-formatter/ai` entry point lets you rewrite SQL with an LLM (Anthropic / OpenAI / Gemini / Ollama / custom). By default, the library uses DLH's opinionated system prompt, which encodes warehouse-aware optimization heuristics (predicate pushdown, CTEs over correlated subqueries, explicit JOINs, partition/cluster-key awareness, etc.).
+
+```ts
+import { withAI } from '@dlh.io/dlh-sql-formatter/ai';
+
+const result = await withAI('SELECT * FROM users WHERE country = \'US\'', {
+  provider: 'anthropic',
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  features: ['rewrite'],
+  dialect: 'snowflake',
+});
+```
+
+### Overriding the default prompt
+
+Since v1.3.0, callers can replace or extend the DLH default prompt via `AIConfig.rewritePrompt`:
+
+```ts
+// Extend the DLH default with an additional rule
+await withAI(sql, {
+  provider: 'openai',
+  apiKey: process.env.OPENAI_API_KEY,
+  features: ['rewrite'],
+  rewritePrompt: {
+    mode: 'extend',
+    text: 'Always prefer CTEs over correlated subqueries, even if the query is trivial.',
+  },
+});
+
+// Replace the DLH default entirely (you own the JSON contract)
+await withAI(sql, {
+  provider: 'anthropic',
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  features: ['rewrite'],
+  rewritePrompt: {
+    mode: 'replace',
+    text: 'You are a terse SQL rewriter. Return only `{ "sql": "…", "explanation": "…", "optimizations": [] }`.',
+  },
+});
+```
+
+| `mode` | Behaviour |
+| --- | --- |
+| `'default'` (or omitted) | Use the built-in DLH prompt |
+| `'extend'` | DLH default + `"Additional guidance:\n" + text` |
+| `'replace'` | Use `text` verbatim — you must still instruct the model to return the `{ sql, explanation, optimizations[] }` JSON shape |
+
+Empty / whitespace-only `text` falls back to the default regardless of mode.
+
+The DLH default prompt is also exported as a constant so you can display it, log it, or wrap it in your own template:
+
+```ts
+import { DEFAULT_REWRITE_SYSTEM_PROMPT, buildDefaultRewriteSystemPrompt } from '@dlh.io/dlh-sql-formatter/ai';
+
+console.log(DEFAULT_REWRITE_SYSTEM_PROMPT);                 // verbatim constant
+console.log(buildDefaultRewriteSystemPrompt('bigquery'));   // default + dialect annotation
+```
 
 ## Editor Integration
 
