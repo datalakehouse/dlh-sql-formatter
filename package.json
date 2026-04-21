@@ -1,6 +1,6 @@
 {
   "name": "@dlh.io/dlh-sql-formatter",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "publisher": "DLH",
   "description": "Format whitespace in a SQL query to make it more readable",
   "license": "MIT",
