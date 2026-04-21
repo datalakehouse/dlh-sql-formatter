@@ -15,7 +15,8 @@ on:
         default: ''
 
 permissions:
-  contents: write
+  contents: write # push commit + tag
+  actions: write # dispatch the Release workflow via gh CLI
 
 jobs:
   bump:
@@ -23,10 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Use a PAT so the resulting tag push re-triggers the Release workflow.
-          # The default GITHUB_TOKEN cannot trigger other workflows (GitHub safety).
-          # Secret `RELEASE_PAT` must have Contents: Read/Write on this repo.
-          token: ${{ secrets.RELEASE_PAT }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -42,10 +39,26 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump version and tag
+        id: bump
         run: |
           if [ -n "${{ inputs.preid }}" ]; then
-            npm version "pre${{ inputs.bump }}" --preid="${{ inputs.preid }}" -m "chore: release v%s"
+            NEW_TAG=$(npm version "pre${{ inputs.bump }}" --preid="${{ inputs.preid }}" -m "chore: release v%s")
           else
-            npm version "${{ inputs.bump }}" -m "chore: release v%s"
+            NEW_TAG=$(npm version "${{ inputs.bump }}" -m "chore: release v%s")
           fi
+          # npm version prints the tag (e.g. "v1.3.1") on stdout.
+          echo "tag=${NEW_TAG}" >> "$GITHUB_OUTPUT"
           git push --follow-tags
+
+      - name: Dispatch Release workflow
+        env:
+          # gh CLI authenticates with GITHUB_TOKEN. The default token CAN trigger
+          # workflow_dispatch events (the recursion guard that blocks push:tag
+          # triggers does NOT apply to workflow_dispatch / repository_dispatch).
+          # This keeps Release completely independent — it still fires on a
+          # human `git push --follow-tags` via its push:tags trigger.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yaml \
+            --ref "${GITHUB_REF_NAME}" \
+            -f "tag=${{ steps.bump.outputs.tag }}"
