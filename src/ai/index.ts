@@ -79,6 +79,14 @@ export type {
 export { DEFAULT_MODELS, ENV_KEY_NAMES } from './types.js';
 
 // ---------------------------------------------------------------------------
+// Default prompt (so consumers can display / extend it)
+// ---------------------------------------------------------------------------
+export {
+  DEFAULT_REWRITE_SYSTEM_PROMPT,
+  buildDefaultRewriteSystemPrompt,
+} from './defaultPrompts.js';
+
+// ---------------------------------------------------------------------------
 // Rule engine re-exports
 // ---------------------------------------------------------------------------
 export { analyzeSQL, getRulesForDialect, getAllRuleIds, registerRule } from './rules/index.js';

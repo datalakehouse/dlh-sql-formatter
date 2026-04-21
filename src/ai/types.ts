@@ -114,6 +114,22 @@ export interface AIConfig {
 
   /** Additional provider-specific options (temperature, max_tokens, etc.) */
   providerOptions?: Record<string, unknown>;
+
+  /**
+   * Optional override for the built-in DLH rewrite system prompt.
+   *
+   * - `mode: 'default'` (or omitted): use the built-in DLH prompt
+   * - `mode: 'extend'`: DLH default + "\n\nAdditional guidance:\n" + `text`
+   * - `mode: 'replace'`: use `text` verbatim — MUST still instruct the model
+   *   to return the `{ sql, explanation, optimizations[] }` JSON shape that
+   *   `parseRewriteResponse` expects, otherwise responses will fail to parse.
+   *
+   * Empty/whitespace-only `text` is treated as "default" regardless of mode.
+   */
+  rewritePrompt?: {
+    mode: 'default' | 'extend' | 'replace';
+    text?: string;
+  };
 }
 
 export type AIFeature = 'suggest' | 'rewrite' | 'explain';
@@ -144,5 +160,6 @@ export type AIProviderFactory = (
   apiKey: string,
   model?: string,
   baseUrl?: string,
-  providerOptions?: Record<string, unknown>
+  providerOptions?: Record<string, unknown>,
+  rewritePrompt?: AIConfig['rewritePrompt']
 ) => AIProvider;

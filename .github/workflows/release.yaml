@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (build + pack, no publish)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write # create GitHub Release
+  id-token: write # npm provenance via OIDC
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Generate grammar
+        run: yarn grammar
+
+      - name: Verify tag matches package.json (tag pushes only)
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::Tag v$TAG does not match package.json version $PKG"
+            exit 1
+          fi
+
+      - name: Decide npm dist-tag
+        id: disttag
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF#refs/tags/v}"
+            if [[ "$TAG" == *-* ]]; then
+              echo "tag=rc" >> "$GITHUB_OUTPUT"
+            else
+              echo "tag=latest" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Full check
+        run: yarn check
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish to npm (with provenance)
+        if: ${{ github.event_name == 'push' && inputs.dry_run != true }}
+        run: npm publish --provenance --access public --tag ${{ steps.disttag.outputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Dry run (pack only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+        run: npm pack --dry-run
+
+      - name: Create GitHub Release
+        if: ${{ github.event_name == 'push' && inputs.dry_run != true }}
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          prerelease: ${{ steps.disttag.outputs.tag == 'rc' }}
+          files: |
+            dist/dlh-sql-formatter.min.js
