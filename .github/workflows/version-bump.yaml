@@ -23,7 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use a PAT so the resulting tag push re-triggers the Release workflow.
+          # The default GITHUB_TOKEN cannot trigger other workflows (GitHub safety).
+          # Secret `RELEASE_PAT` must have Contents: Read/Write on this repo.
+          token: ${{ secrets.RELEASE_PAT }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
